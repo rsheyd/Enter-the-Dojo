@@ -19,7 +19,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var scoreLabel = SKLabelNode()
     var power = 0
     var score = 0
-    var gameOverLabel = SKLabelNode()
     
     var timer = Timer()
     var previousPoint : CGPoint!
@@ -36,7 +35,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var inFlight = false
     
     func makeEnemies() {
-        // enemy movement
+        // enemy movement, time should be / 70
         let moveEnemies = SKAction.move(by: CGVector(dx: 0, dy: -1.1 * self.frame.height), duration: TimeInterval(self.frame.height / 70))
         let removeEnemies = SKAction.removeFromParent()
         let moveAndRemoveEnemies = SKAction.sequence([moveEnemies, removeEnemies])
@@ -49,16 +48,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let animation = SKAction.animate(with: [enemyTexture, enemyTexture2, enemyTexture3, enemyTexture4], timePerFrame: 0.2)
         let enemyBounce = SKAction.repeatForever(animation)
         let enemy = SKSpriteNode(texture: enemyTexture)
+        enemy.name = "enemy"
         
         // set random position for enemy nodes
         let randomNum = arc4random_uniform(UInt32(self.frame.width-100))
         let randomX = CGFloat(randomNum) - self.frame.width/2 + 50
+        // y deployment value is "self.frame.maxY + 100"
         enemy.position = CGPoint(x: randomX, y: self.frame.maxY + 100)
 
         enemy.physicsBody = SKPhysicsBody(rectangleOf: enemyTexture.size())
-        enemy.physicsBody!.isDynamic = false
+        enemy.physicsBody!.isDynamic = true
+        enemy.physicsBody!.affectedByGravity = false
         enemy.physicsBody!.categoryBitMask = ColliderType.Enemy.rawValue
-        enemy.physicsBody!.contactTestBitMask = ColliderType.Arrow.rawValue
+        enemy.physicsBody!.contactTestBitMask = ColliderType.Ground.rawValue
         
         enemy.run(enemyBounce)
         enemy.run(moveAndRemoveEnemies)
@@ -77,16 +79,18 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         let arrowTexture = SKTexture (imageNamed: "blue-arrow.png")
         arrow = SKSpriteNode(texture: arrowTexture)
-        arrow.position = CGPoint(x: self.frame.midX, y: self.frame.minY + 100)
+        arrow.position = CGPoint(x: self.frame.midX, y: self.frame.minY + 400)
         arrow.physicsBody = SKPhysicsBody(rectangleOf: arrowTexture.size())
         arrow.physicsBody!.isDynamic = false
         arrow.physicsBody!.categoryBitMask = ColliderType.Arrow.rawValue
-        arrow.physicsBody!.contactTestBitMask = ColliderType.Ground.rawValue
+        arrow.physicsBody!.contactTestBitMask = ColliderType.Ground.rawValue | ColliderType.Enemy.rawValue
+        arrow.physicsBody!.usesPreciseCollisionDetection = true
+        arrow.name = "arrow"
         self.addChild(arrow)
         
         let bowTexture = SKTexture (imageNamed: "blue-bow.png")
         bow = SKSpriteNode(texture: bowTexture)
-        bow.position = CGPoint(x: self.frame.midX, y: self.frame.minY + 100)
+        bow.position = CGPoint(x: self.frame.midX, y: self.frame.minY + 400)
         self.addChild(bow)
         
         let ground = SKNode()
@@ -94,7 +98,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         ground.physicsBody = SKPhysicsBody(rectangleOf: CGSize(width: self.frame.width, height: 1))
         ground.physicsBody!.isDynamic = false
         ground.physicsBody!.categoryBitMask = ColliderType.Ground.rawValue
-        ground.physicsBody!.contactTestBitMask = ColliderType.Ground.rawValue
+        ground.physicsBody!.contactTestBitMask = ColliderType.Enemy.rawValue
+        ground.name = "ground"
         self.addChild(ground)
         
         powerLabel.fontName = "Helvetica"
@@ -118,9 +123,17 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        pulling = true
-        for touch in touches {
-            previousPoint = touch.location(in: self)
+        if gameOver == false {
+            for touch in touches {
+                previousPoint = touch.location(in: self)
+            }
+        }
+        else {
+            gameOver = false
+            score = 0
+            self.speed = 1
+            self.removeAllChildren()
+            setupGame()
         }
     }
     
@@ -128,63 +141,71 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         for touch in touches {
             let currentPoint = touch.location(in: self)
             let distance = currentPoint.x - previousPoint.x
+            let pullAmount = previousPoint.y - currentPoint.y
             previousPoint = currentPoint
             arrow.zRotation = arrow.zRotation - distance/100.0
             bow.zRotation = bow.zRotation - distance/100.0
+            power += Int(pullAmount)
+            powerLabel.text = String(power)
         }
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        pulling = false
         arrow.physicsBody!.isDynamic = true
-        arrow.physicsBody!.applyImpulse(CGVector(dx: arrow.zRotation * -120, dy: CGFloat(power*3)))
+        arrow.physicsBody!.applyImpulse(CGVector(dx: arrow.zRotation * -120, dy: CGFloat(power)))
         power = 0
         powerLabel.text = "0"
         inFlight = true
     }
     
+    func arrowCollided(with node: SKNode) {
+        if node.name == "enemy" {
+            node.removeFromParent()
+            arrowCollision = true
+            score += 1
+            scoreLabel.text = String(score)
+        } else if node.name == "ground" {
+            arrowCollision = true
+        }
+    }
+    
+    func enemyCollided(with node: SKNode) {
+        if node.name == "ground" {
+            self.speed = 0
+            gameOver = true
+            timer.invalidate()
+            
+            let gameOverLabel = SKLabelNode(text: "Game Over!")
+            gameOverLabel.position = CGPoint(x: self.frame.midX, y: self.frame.midY + 80)
+            gameOverLabel.fontSize = 70
+            let finalScoreLabel = SKLabelNode(text: "Your score is \(scoreLabel.text!)")
+            finalScoreLabel.position = CGPoint(x: self.frame.midX, y: self.frame.midY)
+            finalScoreLabel.fontSize = 70
+            let tapLabel = SKLabelNode(text: "Tap to play again.")
+            tapLabel.position = CGPoint(x: self.frame.midX, y: self.frame.midY - 80)
+            tapLabel.fontSize = 70
+            self.addChild(gameOverLabel)
+            self.addChild(finalScoreLabel)
+            self.addChild(tapLabel)
+        }
+    }
+    
     func didBegin(_ contact: SKPhysicsContact) {
         
         if gameOver == false {
-            
-            if contact.bodyA.categoryBitMask == ColliderType.Ground.rawValue || contact.bodyB.categoryBitMask == ColliderType.Ground.rawValue {
-                arrowCollision = true
+            // arrow collision with ground or enemy
+            if contact.bodyA.node?.name == "arrow" {
+                arrowCollided(with: contact.bodyB.node!)
+            } else if contact.bodyB.node?.name == "arrow" {
+                arrowCollided(with: contact.bodyA.node!)
             }
             
-            if contact.bodyA.categoryBitMask == ColliderType.Enemy.rawValue || contact.bodyB.categoryBitMask == ColliderType.Enemy.rawValue {
-                if contact.bodyA.node?.name == "enemy" {
-                    contact.bodyA.node?.removeFromParent()
-                } else {
-                    contact.bodyB.node?.removeFromParent()
-                }
-                arrowCollision = true
-                score += 1
-                scoreLabel.text = String(score)
+            // enemy collision with ground
+            if contact.bodyA.node?.name == "enemy" {
+                enemyCollided(with: contact.bodyB.node!)
+            } else if contact.bodyB.node?.name == "enemy" {
+                enemyCollided(with: contact.bodyA.node!)
             }
-            
-            
-            
-            else {
-                /*
-                self.speed = 0
-                
-                gameOver = true
-                
-                timer.invalidate()
-                
-                gameOverLabel.fontName = "Helvetica"
-                
-                gameOverLabel.fontSize = 30
-                
-                gameOverLabel.text = "Game Over! Tap to play again."
-                
-                gameOverLabel.position = CGPoint(x: self.frame.midX, y: self.frame.midY)
-                
-                self.addChild(gameOverLabel)
- */
-                
-            }
-            
         }
     }
     
@@ -192,29 +213,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
         
-        // increase arrow power while user holding touch
-        if power < 100 {
-            if pulling {
-                power += 1
-                powerLabel.text = String(power)
-            }
-        }
-        
-        // reset arrow when out of bounds or collided with ground
+        // reset arrow when out of bounds or collided with ground or enemy
         if arrow.position.x > self.frame.maxX || arrow.position.x < self.frame.minX || arrow.position.y > self.frame.maxY || arrowCollision {
             arrow.physicsBody!.velocity = CGVector(dx: 0, dy: 0)
             arrow.physicsBody!.isDynamic = false
             arrow.zRotation = bow.zRotation
-            arrow.position = CGPoint(x: self.frame.midX, y: self.frame.minY + 100)
+            arrow.position = CGPoint(x: self.frame.midX, y: self.frame.minY + 400)
             arrowCollision = false
             inFlight = false
         }
         
         // simulate arrow's angular rotation
         if inFlight {
-            print(arrow.zRotation)
             let angle = atan2(arrow.physicsBody!.velocity.dy, arrow.physicsBody!.velocity.dx)-1.54
-            print(angle)
             arrow.zRotation = angle
         }
     }
