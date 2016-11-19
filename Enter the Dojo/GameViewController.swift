@@ -2,7 +2,7 @@
 //  GameViewController.swift
 //  Enter the Dojo
 //
-//  Created by Roman Sheydvasser on 11/18/16.
+//  Created by Roman Sheydvasser on 11/10/16.
 //  Copyright © 2016 RLabs. All rights reserved.
 //
 
@@ -33,7 +33,7 @@ class GameViewController: UIViewController {
     }
 
     override var shouldAutorotate: Bool {
-        return true
+        return false
     }
 
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {

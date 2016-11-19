@@ -15,6 +15,13 @@
 		30AF26CB1DDFDEB700331200 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 30AF26C91DDFDEB700331200 /* Main.storyboard */; };
 		30AF26CD1DDFDEB700331200 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 30AF26CC1DDFDEB700331200 /* Assets.xcassets */; };
 		30AF26D01DDFDEB700331200 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 30AF26CE1DDFDEB700331200 /* LaunchScreen.storyboard */; };
+		30AF26DF1DDFDFDD00331200 /* blue-arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 30AF26D81DDFDFDD00331200 /* blue-arrow.png */; };
+		30AF26E01DDFDFDD00331200 /* blue-bow.png in Resources */ = {isa = PBXBuildFile; fileRef = 30AF26D91DDFDFDD00331200 /* blue-bow.png */; };
+		30AF26E11DDFDFDD00331200 /* grass.png in Resources */ = {isa = PBXBuildFile; fileRef = 30AF26DA1DDFDFDD00331200 /* grass.png */; };
+		30AF26E21DDFDFDD00331200 /* idle_0.png in Resources */ = {isa = PBXBuildFile; fileRef = 30AF26DB1DDFDFDD00331200 /* idle_0.png */; };
+		30AF26E31DDFDFDD00331200 /* idle_1.png in Resources */ = {isa = PBXBuildFile; fileRef = 30AF26DC1DDFDFDD00331200 /* idle_1.png */; };
+		30AF26E41DDFDFDD00331200 /* idle_2.png in Resources */ = {isa = PBXBuildFile; fileRef = 30AF26DD1DDFDFDD00331200 /* idle_2.png */; };
+		30AF26E51DDFDFDD00331200 /* idle_3.png in Resources */ = {isa = PBXBuildFile; fileRef = 30AF26DE1DDFDFDD00331200 /* idle_3.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +35,13 @@
 		30AF26CC1DDFDEB700331200 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		30AF26CF1DDFDEB700331200 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		30AF26D11DDFDEB700331200 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		30AF26D81DDFDFDD00331200 /* blue-arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "blue-arrow.png"; sourceTree = "<group>"; };
+		30AF26D91DDFDFDD00331200 /* blue-bow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "blue-bow.png"; sourceTree = "<group>"; };
+		30AF26DA1DDFDFDD00331200 /* grass.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = grass.png; sourceTree = "<group>"; };
+		30AF26DB1DDFDFDD00331200 /* idle_0.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = idle_0.png; sourceTree = "<group>"; };
+		30AF26DC1DDFDFDD00331200 /* idle_1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = idle_1.png; sourceTree = "<group>"; };
+		30AF26DD1DDFDFDD00331200 /* idle_2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = idle_2.png; sourceTree = "<group>"; };
+		30AF26DE1DDFDFDD00331200 /* idle_3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = idle_3.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,8 +83,23 @@
 				30AF26CC1DDFDEB700331200 /* Assets.xcassets */,
 				30AF26CE1DDFDEB700331200 /* LaunchScreen.storyboard */,
 				30AF26D11DDFDEB700331200 /* Info.plist */,
+				30AF26D71DDFDFDD00331200 /* Art */,
 			);
 			path = "Enter the Dojo";
+			sourceTree = "<group>";
+		};
+		30AF26D71DDFDFDD00331200 /* Art */ = {
+			isa = PBXGroup;
+			children = (
+				30AF26D81DDFDFDD00331200 /* blue-arrow.png */,
+				30AF26D91DDFDFDD00331200 /* blue-bow.png */,
+				30AF26DA1DDFDFDD00331200 /* grass.png */,
+				30AF26DB1DDFDFDD00331200 /* idle_0.png */,
+				30AF26DC1DDFDFDD00331200 /* idle_1.png */,
+				30AF26DD1DDFDFDD00331200 /* idle_2.png */,
+				30AF26DE1DDFDFDD00331200 /* idle_3.png */,
+			);
+			path = Art;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -134,7 +163,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				30AF26CB1DDFDEB700331200 /* Main.storyboard in Resources */,
+				30AF26E51DDFDFDD00331200 /* idle_3.png in Resources */,
+				30AF26DF1DDFDFDD00331200 /* blue-arrow.png in Resources */,
 				30AF26C21DDFDEB700331200 /* GameScene.sks in Resources */,
+				30AF26E31DDFDFDD00331200 /* idle_1.png in Resources */,
+				30AF26E01DDFDFDD00331200 /* blue-bow.png in Resources */,
+				30AF26E41DDFDFDD00331200 /* idle_2.png in Resources */,
+				30AF26E21DDFDFDD00331200 /* idle_0.png in Resources */,
+				30AF26E11DDFDFDD00331200 /* grass.png in Resources */,
 				30AF26CD1DDFDEB700331200 /* Assets.xcassets in Resources */,
 				30AF26D01DDFDEB700331200 /* LaunchScreen.storyboard in Resources */,
 				30AF26C41DDFDEB700331200 /* Actions.sks in Resources */,
@@ -312,6 +348,7 @@
 				30AF26D61DDFDEB700331200 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
