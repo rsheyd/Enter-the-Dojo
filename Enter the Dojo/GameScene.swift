@@ -9,6 +9,10 @@
 import SpriteKit
 import GameplayKit
 
+let Pi = CGFloat(M_PI)
+let DegreesToRadians = Pi / 180
+let RadiansToDegrees = 180 / Pi
+
 class GameScene: SKScene, SKPhysicsContactDelegate {
     
     var bow = SKSpriteNode()
@@ -17,11 +21,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     var powerLabel = SKLabelNode()
     var scoreLabel = SKLabelNode()
-    var power = 0
+    var powerTextLabel = SKLabelNode()
+    var scoreTextLabel = SKLabelNode()
+    var power = CGFloat(0)
     var score = 0
     
     var timer = Timer()
-    var previousPoint : CGPoint!
+    var originalTouch : CGPoint!
     
     enum ColliderType: UInt32 {
         case Arrow = 1
@@ -33,6 +39,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var pulling = false
     var arrowCollision = false
     var inFlight = false
+    
+    var yDiff = Float()
+    var xDiff = Float()
     
     func makeEnemies() {
         // enemy movement, time should be / 70
@@ -55,6 +64,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         let randomX = CGFloat(randomNum) - self.frame.width/2 + 50
         // y deployment value is "self.frame.maxY + 100"
         enemy.position = CGPoint(x: randomX, y: self.frame.maxY + 100)
+        enemy.zPosition = -1
 
         enemy.physicsBody = SKPhysicsBody(rectangleOf: enemyTexture.size())
         enemy.physicsBody!.isDynamic = true
@@ -74,12 +84,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         bg = SKSpriteNode(texture: bgTexture)
         bg.size.height = self.frame.height
         bg.size.width = self.frame.width
-        bg.zPosition = -1
+        bg.zPosition = -2
         self.addChild(bg)
         
         let arrowTexture = SKTexture (imageNamed: "blue-arrow.png")
         arrow = SKSpriteNode(texture: arrowTexture)
-        arrow.position = CGPoint(x: self.frame.midX, y: self.frame.minY + 400)
+        arrow.position = CGPoint(x: self.frame.midX, y: self.frame.midY - 150)
         arrow.physicsBody = SKPhysicsBody(rectangleOf: arrowTexture.size())
         arrow.physicsBody!.isDynamic = false
         arrow.physicsBody!.categoryBitMask = ColliderType.Arrow.rawValue
@@ -90,7 +100,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         let bowTexture = SKTexture (imageNamed: "blue-bow.png")
         bow = SKSpriteNode(texture: bowTexture)
-        bow.position = CGPoint(x: self.frame.midX, y: self.frame.minY + 400)
+        bow.position = CGPoint(x: self.frame.midX, y: self.frame.midY - 150)
         self.addChild(bow)
         
         let ground = SKNode()
@@ -101,18 +111,30 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         ground.physicsBody!.contactTestBitMask = ColliderType.Enemy.rawValue
         ground.name = "ground"
         self.addChild(ground)
+
+        powerTextLabel.fontName = "Helvetica"
+        powerTextLabel.fontSize = 50
+        powerTextLabel.text = "Power"
+        powerTextLabel.position = CGPoint(x: self.frame.maxX - 90, y: self.frame.maxY - 60)
+        self.addChild(powerTextLabel)
         
         powerLabel.fontName = "Helvetica"
         powerLabel.fontSize = 50
         powerLabel.text = "0"
-        powerLabel.position = CGPoint(x: self.frame.maxX - 70, y: self.frame.minY + 70)
+        powerLabel.position = CGPoint(x: self.frame.maxX - 90, y: self.frame.maxY - 110)
         self.addChild(powerLabel)
+        
+        scoreTextLabel.fontName = "Helvetica"
+        scoreTextLabel.fontSize = 50
+        scoreTextLabel.text = "Score"
+        scoreTextLabel.position = CGPoint(x: self.frame.minX + 90, y: self.frame.maxY - 60)
+        self.addChild(scoreTextLabel)
         
         scoreLabel.fontName = "Helvetica"
         scoreLabel.fontSize = 50
         scoreLabel.fontColor = UIColor.green
         scoreLabel.text = "0"
-        scoreLabel.position = CGPoint(x: self.frame.minX + 70, y: self.frame.minY + 70)
+        scoreLabel.position = CGPoint(x: self.frame.minX + 90, y: self.frame.maxY - 110)
         self.addChild(scoreLabel)
     }
     
@@ -125,7 +147,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         if gameOver == false {
             for touch in touches {
-                previousPoint = touch.location(in: self)
+                originalTouch = touch.location(in: self)
             }
         }
         else {
@@ -138,24 +160,38 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+
         for touch in touches {
-            let currentPoint = touch.location(in: self)
-            let distance = currentPoint.x - previousPoint.x
-            let pullAmount = previousPoint.y - currentPoint.y
-            previousPoint = currentPoint
-            arrow.zRotation = arrow.zRotation - distance/100.0
-            bow.zRotation = bow.zRotation - distance/100.0
-            power += Int(pullAmount)
-            powerLabel.text = String(power)
+            let currentTouch = touch.location(in: self)
+            
+            // calculate distance from original touch point
+            xDiff = Float(originalTouch.x - currentTouch.x)
+            yDiff = Float(originalTouch.y - currentTouch.y)
+            let pullAmount = abs(CGFloat(hypotf(yDiff, xDiff)))
+            
+            // rotate bow and arrow with touch
+            let touchAngle = atan2(currentTouch.y, currentTouch.x)
+            arrow.zRotation = touchAngle + 90 * DegreesToRadians
+            bow.zRotation = arrow.zRotation
+            
+            // set power based on distance from original touch point and update power indicator's color
+            power = pullAmount
+            powerLabel.text = String(Int(power/5))
+            let colorChange = power/500
+            powerLabel.fontColor = UIColor(red: 1, green: 1-colorChange, blue: 1-colorChange, alpha: 1)
         }
     }
     
+    
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        arrow.physicsBody!.isDynamic = true
-        arrow.physicsBody!.applyImpulse(CGVector(dx: arrow.zRotation * -120, dy: CGFloat(power)))
-        power = 0
-        powerLabel.text = "0"
-        inFlight = true
+        if inFlight == false {
+            arrow.physicsBody!.isDynamic = true
+            arrow.physicsBody!.applyImpulse(CGVector(dx: CGFloat(xDiff), dy: CGFloat(yDiff)))
+            power = 0
+            powerLabel.text = "0"
+            powerLabel.fontColor = UIColor.white
+            inFlight = true
+        }
     }
     
     func arrowCollided(with node: SKNode) {
@@ -218,14 +254,14 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             arrow.physicsBody!.velocity = CGVector(dx: 0, dy: 0)
             arrow.physicsBody!.isDynamic = false
             arrow.zRotation = bow.zRotation
-            arrow.position = CGPoint(x: self.frame.midX, y: self.frame.minY + 400)
+            arrow.position = CGPoint(x: self.frame.midX, y: self.frame.midY - 150)
             arrowCollision = false
             inFlight = false
         }
         
         // simulate arrow's angular rotation
         if inFlight {
-            let angle = atan2(arrow.physicsBody!.velocity.dy, arrow.physicsBody!.velocity.dx)-1.54
+            let angle = atan2(arrow.physicsBody!.velocity.dy, arrow.physicsBody!.velocity.dx) - 90 * DegreesToRadians
             arrow.zRotation = angle
         }
     }
