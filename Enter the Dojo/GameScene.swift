@@ -160,7 +160,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         explainNinjaLabel.position = CGPoint(x: self.frame.midX, y: self.frame.midY + 190)
         explainNinjaLabel.fontSize = 60
-        explainNinjaLabel2.position = CGPoint(x: self.frame.midX, y: self.frame.midY + 140)
+        explainNinjaLabel2.position = CGPoint(x: self.frame.midX, y: self.frame.midY + 125)
         explainNinjaLabel2.fontSize = 60
         explainShootingLabel.position = CGPoint(x: self.frame.midX, y: self.frame.midY - 50)
         explainShootingLabel.fontSize = 50
@@ -191,8 +191,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 let currentTouch = touch.location(in: self)
                 
                 // calculate distance from original touch point
-                xDiff = Float(originalTouch.x - currentTouch.x)
-                yDiff = Float(originalTouch.y - currentTouch.y)
+                xDiff = Float(originalTouch.x - currentTouch.x)/2
+                yDiff = Float(originalTouch.y - currentTouch.y)/2
                 let pullAmount = abs(CGFloat(hypotf(yDiff, xDiff)))
                 
                 // rotate bow and arrow with touch
@@ -279,7 +279,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             finalScoreLabel.position = CGPoint(x: self.frame.midX, y: self.frame.midY)
             finalScoreLabel.fontSize = 70
             let tapLabel = SKLabelNode(text: "Tap here to play again.")
-            tapLabel.position = CGPoint(x: self.frame.midX, y: self.frame.maxY - 150)
+            tapLabel.position = CGPoint(x: self.frame.midX, y: self.frame.maxY - 170)
             tapLabel.fontSize = 70
             self.addChild(gameOverLabel)
             self.addChild(finalScoreLabel)
