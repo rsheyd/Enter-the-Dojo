@@ -26,6 +26,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var scoreLabel = SKLabelNode()
     var powerTextLabel = SKLabelNode()
     var scoreTextLabel = SKLabelNode()
+    let explainNinjaLabel = SKLabelNode(text: "Shoot the ninjas before")
+    let explainNinjaLabel2 = SKLabelNode(text: "they reach the bottom!")
+    let explainShootingLabel = SKLabelNode(text: "Drag down to shoot arrows.")
+    let tapStartLabel = SKLabelNode(text: "Tap to start.")
+    
     var power = CGFloat(0)
     var score = 0
     var difficulty = 1.0
@@ -41,6 +46,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         case Ground = 4
     }
     
+    var gameStart = false
     var gameOver = false
     var pulling = false
     var arrowCollision = false
@@ -90,10 +96,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         do {
             try musicPlayer = AVAudioPlayer(contentsOf: URL(fileURLWithPath: gameMusicPath!))
         } catch { }
+        musicPlayer.volume = 0.2
         musicPlayer.play()
-        
-        
-        timer = Timer.scheduledTimer(timeInterval: (3 / difficulty), target: self, selector: #selector(self.makeEnemies), userInfo: nil, repeats: false)
         
         let bgTexture = SKTexture(imageNamed: "grass.png")
         bg = SKSpriteNode(texture: bgTexture)
@@ -153,6 +157,19 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         scoreLabel.text = "0"
         scoreLabel.position = CGPoint(x: self.frame.minX + 90, y: self.frame.maxY - 110)
         self.addChild(scoreLabel)
+        
+        explainNinjaLabel.position = CGPoint(x: self.frame.midX, y: self.frame.midY + 190)
+        explainNinjaLabel.fontSize = 60
+        explainNinjaLabel2.position = CGPoint(x: self.frame.midX, y: self.frame.midY + 140)
+        explainNinjaLabel2.fontSize = 60
+        explainShootingLabel.position = CGPoint(x: self.frame.midX, y: self.frame.midY - 50)
+        explainShootingLabel.fontSize = 50
+        tapStartLabel.position = CGPoint(x: self.frame.midX, y: self.frame.midY - 110)
+        tapStartLabel.fontSize = 50
+        self.addChild(explainNinjaLabel)
+        self.addChild(explainNinjaLabel2)
+        self.addChild(explainShootingLabel)
+        self.addChild(tapStartLabel)
     }
     
     override func didMove(to view: SKView) {
@@ -160,59 +177,74 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         setupGame()
     }
     
-    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         if gameOver == false {
             for touch in touches {
                 originalTouch = touch.location(in: self)
             }
         }
-        else {
-            gameOver = false
-            score = 0
-            self.speed = 1
-            self.removeAllChildren()
-            setupGame()
-        }
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-
-        for touch in touches {
-            let currentTouch = touch.location(in: self)
-            
-            // calculate distance from original touch point
-            xDiff = Float(originalTouch.x - currentTouch.x)
-            yDiff = Float(originalTouch.y - currentTouch.y)
-            let pullAmount = abs(CGFloat(hypotf(yDiff, xDiff)))
-            
-            // rotate bow and arrow with touch
-            let touchAngle = atan2(currentTouch.y, currentTouch.x)
-            arrow.zRotation = touchAngle + 90 * DegreesToRadians
-            bow.zRotation = arrow.zRotation
-            
-            // set power based on distance from original touch point and update power indicator's color
-            power = pullAmount
-            powerLabel.text = String(Int(power/5))
-            let colorChange = power/500
-            powerLabel.fontColor = UIColor(red: 1, green: 1-colorChange, blue: 1-colorChange, alpha: 1)
-            bow.colorBlendFactor = colorChange
-            
-            // let action = SKAction.colorize(with: UIColor.red, colorBlendFactor: 1, duration: 0.1)
+        if gameOver == false && gameStart {
+            for touch in touches {
+                let currentTouch = touch.location(in: self)
+                
+                // calculate distance from original touch point
+                xDiff = Float(originalTouch.x - currentTouch.x)
+                yDiff = Float(originalTouch.y - currentTouch.y)
+                let pullAmount = abs(CGFloat(hypotf(yDiff, xDiff)))
+                
+                // rotate bow and arrow with touch
+                let touchAngle = atan2(currentTouch.y, currentTouch.x)
+                arrow.zRotation = touchAngle + 90 * DegreesToRadians
+                bow.zRotation = arrow.zRotation
+                
+                // set power based on distance from original touch point and update power indicator's color
+                power = pullAmount
+                powerLabel.text = String(Int(power/5))
+                let colorChange = power/500
+                powerLabel.fontColor = UIColor(red: 1, green: 1-colorChange, blue: 1-colorChange, alpha: 1)
+                bow.colorBlendFactor = colorChange
+                
+                // let action = SKAction.colorize(with: UIColor.red, colorBlendFactor: 1, duration: 0.1)
+            }
         }
     }
     
-    
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        if inFlight == false {
-            arrow.physicsBody!.isDynamic = true
-            arrow.physicsBody!.applyImpulse(CGVector(dx: CGFloat(xDiff), dy: CGFloat(yDiff)))
-            power = 0
-            powerLabel.text = "0"
-            powerLabel.fontColor = UIColor.white
-            inFlight = true
-            bow.colorBlendFactor = 0
+        
+        for touch in touches {
+            if inFlight == false && gameOver == false && gameStart {
+                arrow.physicsBody!.isDynamic = true
+                arrow.physicsBody!.applyImpulse(CGVector(dx: CGFloat(xDiff), dy: CGFloat(yDiff)))
+                power = 0
+                powerLabel.text = "0"
+                powerLabel.fontColor = UIColor.white
+                inFlight = true
+                bow.colorBlendFactor = 0
+            }
+            
+            if gameStart == false {
+                gameStart = true
+                explainNinjaLabel.removeFromParent()
+                explainNinjaLabel2.removeFromParent()
+                explainShootingLabel.removeFromParent()
+                tapStartLabel.removeFromParent()
+                
+                timer = Timer.scheduledTimer(timeInterval: (3 / difficulty), target: self, selector: #selector(self.makeEnemies), userInfo: nil, repeats: false)
+            }
+            
+            if gameOver && touch.location(in: self).y > self.frame.maxY - 200 {
+                gameOver = false
+                gameStart = false
+                score = 0
+                self.speed = 1
+                self.removeAllChildren()
+                setupGame()
+            }
         }
+        
     }
     
     func arrowCollided(with node: SKNode) {
@@ -246,8 +278,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             let finalScoreLabel = SKLabelNode(text: "Your score is \(scoreLabel.text!)")
             finalScoreLabel.position = CGPoint(x: self.frame.midX, y: self.frame.midY)
             finalScoreLabel.fontSize = 70
-            let tapLabel = SKLabelNode(text: "Tap to play again.")
-            tapLabel.position = CGPoint(x: self.frame.midX, y: self.frame.midY - 80)
+            let tapLabel = SKLabelNode(text: "Tap here to play again.")
+            tapLabel.position = CGPoint(x: self.frame.midX, y: self.frame.maxY - 150)
             tapLabel.fontSize = 70
             self.addChild(gameOverLabel)
             self.addChild(finalScoreLabel)
@@ -273,7 +305,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             }
         }
     }
-    
     
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
