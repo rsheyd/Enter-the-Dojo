@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		301A986D1DE1680B006A59B3 /* smokeParticle.sks in Resources */ = {isa = PBXBuildFile; fileRef = 301A986C1DE1680B006A59B3 /* smokeParticle.sks */; };
+		301A98701DE16F95006A59B3 /* 03-chibi-ninja.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 301A986F1DE16F95006A59B3 /* 03-chibi-ninja.mp3 */; };
 		30AF26C01DDFDEB700331200 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30AF26BF1DDFDEB700331200 /* AppDelegate.swift */; };
 		30AF26C21DDFDEB700331200 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 30AF26C11DDFDEB700331200 /* GameScene.sks */; };
 		30AF26C41DDFDEB700331200 /* Actions.sks in Resources */ = {isa = PBXBuildFile; fileRef = 30AF26C31DDFDEB700331200 /* Actions.sks */; };
@@ -25,6 +27,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		301A986C1DE1680B006A59B3 /* smokeParticle.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = smokeParticle.sks; sourceTree = "<group>"; };
+		301A986F1DE16F95006A59B3 /* 03-chibi-ninja.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "03-chibi-ninja.mp3"; sourceTree = "<group>"; };
 		30AF26BC1DDFDEB700331200 /* Enter the Dojo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Enter the Dojo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		30AF26BF1DDFDEB700331200 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		30AF26C11DDFDEB700331200 /* GameScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = GameScene.sks; sourceTree = "<group>"; };
@@ -55,6 +59,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		301A986E1DE16F95006A59B3 /* Sounds */ = {
+			isa = PBXGroup;
+			children = (
+				301A986F1DE16F95006A59B3 /* 03-chibi-ninja.mp3 */,
+			);
+			path = Sounds;
+			sourceTree = "<group>";
+		};
 		30AF26B31DDFDEB700331200 = {
 			isa = PBXGroup;
 			children = (
@@ -78,11 +90,13 @@
 				30AF26C11DDFDEB700331200 /* GameScene.sks */,
 				30AF26C31DDFDEB700331200 /* Actions.sks */,
 				30AF26C51DDFDEB700331200 /* GameScene.swift */,
+				301A986C1DE1680B006A59B3 /* smokeParticle.sks */,
 				30AF26C71DDFDEB700331200 /* GameViewController.swift */,
 				30AF26C91DDFDEB700331200 /* Main.storyboard */,
 				30AF26CC1DDFDEB700331200 /* Assets.xcassets */,
 				30AF26CE1DDFDEB700331200 /* LaunchScreen.storyboard */,
 				30AF26D11DDFDEB700331200 /* Info.plist */,
+				301A986E1DE16F95006A59B3 /* Sounds */,
 				30AF26D71DDFDFDD00331200 /* Art */,
 			);
 			path = "Enter the Dojo";
@@ -166,9 +180,11 @@
 				30AF26E51DDFDFDD00331200 /* idle_3.png in Resources */,
 				30AF26DF1DDFDFDD00331200 /* blue-arrow.png in Resources */,
 				30AF26C21DDFDEB700331200 /* GameScene.sks in Resources */,
+				301A98701DE16F95006A59B3 /* 03-chibi-ninja.mp3 in Resources */,
 				30AF26E31DDFDFDD00331200 /* idle_1.png in Resources */,
 				30AF26E01DDFDFDD00331200 /* blue-bow.png in Resources */,
 				30AF26E41DDFDFDD00331200 /* idle_2.png in Resources */,
+				301A986D1DE1680B006A59B3 /* smokeParticle.sks in Resources */,
 				30AF26E21DDFDFDD00331200 /* idle_0.png in Resources */,
 				30AF26E11DDFDFDD00331200 /* grass.png in Resources */,
 				30AF26CD1DDFDEB700331200 /* Assets.xcassets in Resources */,

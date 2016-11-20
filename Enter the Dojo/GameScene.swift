@@ -5,9 +5,12 @@
 //  Created by Roman Sheydvasser on 11/10/16.
 //  Copyright © 2016 RLabs. All rights reserved.
 //
+//  music by Eric Skiff: http://ericskiff.com/music
+//
 
 import SpriteKit
 import GameplayKit
+import AVFoundation
 
 let Pi = CGFloat(M_PI)
 let DegreesToRadians = Pi / 180
@@ -28,6 +31,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var difficulty = 1.0
     
     var timer = Timer()
+    var musicPlayer = AVAudioPlayer()
+    let gameMusicPath = Bundle.main.path(forResource: "03-chibi-ninja", ofType: "mp3")
     var originalTouch : CGPoint!
     
     enum ColliderType: UInt32 {
@@ -81,6 +86,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func setupGame() {
         difficulty = 1.0
+        
+        do {
+            try musicPlayer = AVAudioPlayer(contentsOf: URL(fileURLWithPath: gameMusicPath!))
+        } catch { }
+        musicPlayer.play()
+        
         
         timer = Timer.scheduledTimer(timeInterval: (3 / difficulty), target: self, selector: #selector(self.makeEnemies), userInfo: nil, repeats: false)
         
@@ -206,6 +217,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func arrowCollided(with node: SKNode) {
         if node.name == "enemy" {
+            if let particles = SKEmitterNode(fileNamed: "smokeParticle.sks") {
+                particles.position = node.position
+                particles.numParticlesToEmit = 30
+                addChild(particles)
+            }
             node.removeFromParent()
             arrowCollision = true
             score += 1
@@ -221,6 +237,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             self.speed = 0
             gameOver = true
             timer.invalidate()
+            arrow.removeFromParent()
+            musicPlayer.stop()
             
             let gameOverLabel = SKLabelNode(text: "Game Over!")
             gameOverLabel.position = CGPoint(x: self.frame.midX, y: self.frame.midY + 80)
@@ -274,6 +292,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         if inFlight {
             let angle = atan2(arrow.physicsBody!.velocity.dy, arrow.physicsBody!.velocity.dx) - 90 * DegreesToRadians
             arrow.zRotation = angle
+        }
+        
+        // repeat game song if it ends
+        if musicPlayer.isPlaying == false && gameOver == false {
+            musicPlayer.play()
         }
     }
 }
