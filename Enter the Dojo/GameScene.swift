@@ -25,6 +25,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var scoreTextLabel = SKLabelNode()
     var power = CGFloat(0)
     var score = 0
+    var difficulty = 1.0
     
     var timer = Timer()
     var originalTouch : CGPoint!
@@ -45,7 +46,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func makeEnemies() {
         // enemy movement, time should be / 70
-        let moveEnemies = SKAction.move(by: CGVector(dx: 0, dy: -1.1 * self.frame.height), duration: TimeInterval(self.frame.height / 70))
+        let moveEnemies = SKAction.move(by: CGVector(dx: 0, dy: -1.1 * self.frame.height), duration: TimeInterval(self.frame.height / CGFloat(70 * difficulty)))
         let removeEnemies = SKAction.removeFromParent()
         let moveAndRemoveEnemies = SKAction.sequence([moveEnemies, removeEnemies])
         
@@ -75,10 +76,13 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         enemy.run(enemyBounce)
         enemy.run(moveAndRemoveEnemies)
         self.addChild(enemy)
+        timer = Timer.scheduledTimer(timeInterval: (3 / difficulty), target: self, selector: #selector(self.makeEnemies), userInfo: nil, repeats: false)
     }
     
     func setupGame() {
-        timer = Timer.scheduledTimer(timeInterval: 3, target: self, selector: #selector(self.makeEnemies), userInfo: nil, repeats: true)
+        difficulty = 1.0
+        
+        timer = Timer.scheduledTimer(timeInterval: (3 / difficulty), target: self, selector: #selector(self.makeEnemies), userInfo: nil, repeats: false)
         
         let bgTexture = SKTexture(imageNamed: "grass.png")
         bg = SKSpriteNode(texture: bgTexture)
@@ -100,6 +104,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         
         let bowTexture = SKTexture (imageNamed: "blue-bow.png")
         bow = SKSpriteNode(texture: bowTexture)
+        bow.colorBlendFactor = 0
+        bow.color = UIColor.yellow
         bow.position = CGPoint(x: self.frame.midX, y: self.frame.midY - 150)
         self.addChild(bow)
         
@@ -179,6 +185,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             powerLabel.text = String(Int(power/5))
             let colorChange = power/500
             powerLabel.fontColor = UIColor(red: 1, green: 1-colorChange, blue: 1-colorChange, alpha: 1)
+            bow.colorBlendFactor = colorChange
+            
+            // let action = SKAction.colorize(with: UIColor.red, colorBlendFactor: 1, duration: 0.1)
         }
     }
     
@@ -191,6 +200,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             powerLabel.text = "0"
             powerLabel.fontColor = UIColor.white
             inFlight = true
+            bow.colorBlendFactor = 0
         }
     }
     
@@ -200,6 +210,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             arrowCollision = true
             score += 1
             scoreLabel.text = String(score)
+            difficulty += 0.1
         } else if node.name == "ground" {
             arrowCollision = true
         }
