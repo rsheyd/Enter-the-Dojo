@@ -36,8 +36,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var difficulty = 1.0
     
     var timer = Timer()
-    var musicPlayer = AVAudioPlayer()
-    let gameMusicPath = Bundle.main.path(forResource: "03-chibi-ninja", ofType: "mp3")
+    var backgroundMusic: SKAudioNode!
+    let gameMusicPath = Bundle.main.url(forResource: "03-chibi-ninja", withExtension: "mp3")
     var originalTouch : CGPoint!
     
     enum ColliderType: UInt32 {
@@ -93,11 +93,10 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     func setupGame() {
         difficulty = 1.0
         
-        do {
-            try musicPlayer = AVAudioPlayer(contentsOf: URL(fileURLWithPath: gameMusicPath!))
-        } catch { }
-        musicPlayer.volume = 0.2
-        musicPlayer.play()
+        if let musicURL = gameMusicPath {
+            backgroundMusic = SKAudioNode(url: musicURL)
+            addChild(backgroundMusic)
+        }
         
         let bgTexture = SKTexture(imageNamed: "grass.png")
         bg = SKSpriteNode(texture: bgTexture)
@@ -162,9 +161,9 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         explainNinjaLabel.fontSize = 60
         explainNinjaLabel2.position = CGPoint(x: self.frame.midX, y: self.frame.midY + 125)
         explainNinjaLabel2.fontSize = 60
-        explainShootingLabel.position = CGPoint(x: self.frame.midX, y: self.frame.midY - 50)
+        explainShootingLabel.position = CGPoint(x: self.frame.midX, y: self.frame.midY - 40)
         explainShootingLabel.fontSize = 50
-        tapStartLabel.position = CGPoint(x: self.frame.midX, y: self.frame.midY - 110)
+        tapStartLabel.position = CGPoint(x: self.frame.midX, y: self.frame.midY - 90)
         tapStartLabel.fontSize = 50
         self.addChild(explainNinjaLabel)
         self.addChild(explainNinjaLabel2)
@@ -270,7 +269,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             gameOver = true
             timer.invalidate()
             arrow.removeFromParent()
-            musicPlayer.stop()
+            backgroundMusic.removeFromParent()
             
             let gameOverLabel = SKLabelNode(text: "Game Over!")
             gameOverLabel.position = CGPoint(x: self.frame.midX, y: self.frame.midY + 80)
@@ -323,11 +322,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         if inFlight {
             let angle = atan2(arrow.physicsBody!.velocity.dy, arrow.physicsBody!.velocity.dx) - 90 * DegreesToRadians
             arrow.zRotation = angle
-        }
-        
-        // repeat game song if it ends
-        if musicPlayer.isPlaying == false && gameOver == false {
-            musicPlayer.play()
         }
     }
 }
