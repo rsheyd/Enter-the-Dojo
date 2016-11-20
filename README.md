@@ -1,5 +1,5 @@
 # Enter-the-Dojo
-Swift 3 SpriteKit iPhone game where you defend yourselves against attacking ninjas using your trusty bow.
+Swift 3 SpriteKit iPhone game where you defend yourself against attacking ninjas using your trusty bow.
 
 The art is from http://opengameart.org.
 
