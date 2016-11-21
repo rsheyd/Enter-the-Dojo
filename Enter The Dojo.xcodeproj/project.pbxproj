@@ -70,7 +70,7 @@
 		30AF26B31DDFDEB700331200 = {
 			isa = PBXGroup;
 			children = (
-				30AF26BE1DDFDEB700331200 /* Enter the Dojo */,
+				30AF26BE1DDFDEB700331200 /* Enter The Dojo */,
 				30AF26BD1DDFDEB700331200 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -83,7 +83,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		30AF26BE1DDFDEB700331200 /* Enter the Dojo */ = {
+		30AF26BE1DDFDEB700331200 /* Enter The Dojo */ = {
 			isa = PBXGroup;
 			children = (
 				30AF26BF1DDFDEB700331200 /* AppDelegate.swift */,
@@ -99,6 +99,7 @@
 				301A986E1DE16F95006A59B3 /* Sounds */,
 				30AF26D71DDFDFDD00331200 /* Art */,
 			);
+			name = "Enter The Dojo";
 			path = "Enter the Dojo";
 			sourceTree = "<group>";
 		};
@@ -148,12 +149,12 @@
 				TargetAttributes = {
 					30AF26BB1DDFDEB700331200 = {
 						CreatedOnToolsVersion = 8.1;
-						DevelopmentTeam = G5GFY7GBWB;
+						DevelopmentTeam = 59ZDL3D4PJ;
 						ProvisioningStyle = Automatic;
 					};
 				};
 			};
-			buildConfigurationList = 30AF26B71DDFDEB700331200 /* Build configuration list for PBXProject "Enter the Dojo" */;
+			buildConfigurationList = 30AF26B71DDFDEB700331200 /* Build configuration list for PBXProject "Enter The Dojo" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -324,10 +325,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				DEVELOPMENT_TEAM = G5GFY7GBWB;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = 59ZDL3D4PJ;
 				INFOPLIST_FILE = "Enter the Dojo/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "tech.rlabs.Enter-the-Dojo";
+				PRODUCT_BUNDLE_IDENTIFIER = "tech.rlabs.Enter-Dojo";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 			};
@@ -338,10 +340,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				DEVELOPMENT_TEAM = G5GFY7GBWB;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = 59ZDL3D4PJ;
 				INFOPLIST_FILE = "Enter the Dojo/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "tech.rlabs.Enter-the-Dojo";
+				PRODUCT_BUNDLE_IDENTIFIER = "tech.rlabs.Enter-Dojo";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 			};
@@ -350,7 +353,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		30AF26B71DDFDEB700331200 /* Build configuration list for PBXProject "Enter the Dojo" */ = {
+		30AF26B71DDFDEB700331200 /* Build configuration list for PBXProject "Enter The Dojo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				30AF26D21DDFDEB700331200 /* Debug */,

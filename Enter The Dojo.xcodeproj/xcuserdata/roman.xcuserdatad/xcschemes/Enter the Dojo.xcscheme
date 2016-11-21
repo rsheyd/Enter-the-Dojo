@@ -17,7 +17,7 @@
                BlueprintIdentifier = "30AF26BB1DDFDEB700331200"
                BuildableName = "Enter the Dojo.app"
                BlueprintName = "Enter the Dojo"
-               ReferencedContainer = "container:Enter the Dojo.xcodeproj">
+               ReferencedContainer = "container:Enter The Dojo.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -35,7 +35,7 @@
             BlueprintIdentifier = "30AF26BB1DDFDEB700331200"
             BuildableName = "Enter the Dojo.app"
             BlueprintName = "Enter the Dojo"
-            ReferencedContainer = "container:Enter the Dojo.xcodeproj">
+            ReferencedContainer = "container:Enter The Dojo.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -58,7 +58,7 @@
             BlueprintIdentifier = "30AF26BB1DDFDEB700331200"
             BuildableName = "Enter the Dojo.app"
             BlueprintName = "Enter the Dojo"
-            ReferencedContainer = "container:Enter the Dojo.xcodeproj">
+            ReferencedContainer = "container:Enter The Dojo.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -77,7 +77,7 @@
             BlueprintIdentifier = "30AF26BB1DDFDEB700331200"
             BuildableName = "Enter the Dojo.app"
             BlueprintName = "Enter the Dojo"
-            ReferencedContainer = "container:Enter the Dojo.xcodeproj">
+            ReferencedContainer = "container:Enter The Dojo.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

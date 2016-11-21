@@ -57,7 +57,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func makeEnemies() {
         // enemy movement, time should be / 70
-        let moveEnemies = SKAction.move(by: CGVector(dx: 0, dy: -1.1 * self.frame.height), duration: TimeInterval(self.frame.height / CGFloat(70 * difficulty)))
+        let moveEnemies = SKAction.move(by: CGVector(dx: 0, dy: -1.1 * self.frame.height), duration: TimeInterval(self.frame.height / CGFloat(130 * difficulty)))
         let removeEnemies = SKAction.removeFromParent()
         let moveAndRemoveEnemies = SKAction.sequence([moveEnemies, removeEnemies])
         
@@ -214,6 +214,8 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         
         for touch in touches {
+            
+            // applies arrow shooting power depending on user's touch drag distance and resets bow color/power
             if inFlight == false && gameOver == false && gameStart {
                 arrow.physicsBody!.isDynamic = true
                 arrow.physicsBody!.applyImpulse(CGVector(dx: CGFloat(xDiff), dy: CGFloat(yDiff)))
@@ -224,6 +226,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 bow.colorBlendFactor = 0
             }
             
+            // hides instructions and starts game when user taps screen
             if gameStart == false {
                 gameStart = true
                 explainNinjaLabel.removeFromParent()
@@ -234,6 +237,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 timer = Timer.scheduledTimer(timeInterval: (3 / difficulty), target: self, selector: #selector(self.makeEnemies), userInfo: nil, repeats: false)
             }
             
+            // if game over, restart game after user taps top of screen
             if gameOver && touch.location(in: self).y > self.frame.maxY - 200 {
                 gameOver = false
                 gameStart = false
@@ -265,11 +269,11 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func enemyCollided(with node: SKNode) {
         if node.name == "ground" {
-            self.speed = 0
-            gameOver = true
             timer.invalidate()
             arrow.removeFromParent()
             backgroundMusic.removeFromParent()
+            self.speed = 0
+            gameOver = true
             
             let gameOverLabel = SKLabelNode(text: "Game Over!")
             gameOverLabel.position = CGPoint(x: self.frame.midX, y: self.frame.midY + 80)
