@@ -7,4 +7,4 @@ Music by Eric Skiff: http://ericskiff.com/music
 
 Gameplay video: https://www.youtube.com/watch?v=p6qLimps2iw
 
-![Gameplay Screenshot](https://i.imgur.com/8hSSdk5.png</img>)
+![Gameplay Screenshot](https://i.imgur.com/8hSSdk5.png)
