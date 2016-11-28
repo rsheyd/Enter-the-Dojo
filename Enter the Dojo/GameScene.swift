@@ -56,7 +56,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     var xDiff = Float()
     
     func makeEnemies() {
-        // enemy movement, time should be / 70
+        // enemy movement
         let moveEnemies = SKAction.move(by: CGVector(dx: 0, dy: -1.1 * self.frame.height), duration: TimeInterval(self.frame.height / CGFloat(130 * difficulty)))
         let removeEnemies = SKAction.removeFromParent()
         let moveAndRemoveEnemies = SKAction.sequence([moveEnemies, removeEnemies])
@@ -74,7 +74,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
         // set random position for enemy nodes
         let randomNum = arc4random_uniform(UInt32(self.frame.width-100))
         let randomX = CGFloat(randomNum) - self.frame.width/2 + 50
-        // y deployment value is "self.frame.maxY + 100"
         enemy.position = CGPoint(x: randomX, y: self.frame.maxY + 100)
         enemy.zPosition = -1
 
@@ -205,8 +204,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
                 let colorChange = power/500
                 powerLabel.fontColor = UIColor(red: 1, green: 1-colorChange, blue: 1-colorChange, alpha: 1)
                 bow.colorBlendFactor = colorChange
-                
-                // let action = SKAction.colorize(with: UIColor.red, colorBlendFactor: 1, duration: 0.1)
             }
         }
     }
@@ -327,5 +324,6 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             let angle = atan2(arrow.physicsBody!.velocity.dy, arrow.physicsBody!.velocity.dx) - 90 * DegreesToRadians
             arrow.zRotation = angle
         }
+        
     }
 }
