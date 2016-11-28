@@ -270,6 +270,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             arrow.removeFromParent()
             backgroundMusic.removeFromParent()
             self.speed = 0
+            inFlight = false
             gameOver = true
             
             let gameOverLabel = SKLabelNode(text: "Game Over!")
